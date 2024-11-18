@@ -4,11 +4,95 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import *
+#from mysql import connector
+#from connection import create_connection
 
-#Function that defines a home page
+#Function that defines a home page where all recipe lists are displayed
 def recipelist_page(request):
     # Render the home page template (GET request)
     return render(request, 'homepage.html')
+
+"""def add_recipe(data):
+    conn = create_connection()
+    sql = INSERT INTO recipes (title, category, ingredients, directions)
+             VALUES(%s, %s, %s, %s, %s, %s, %s)                        
+          
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, data)
+        conn.commit()
+        return True
+    except connector.Error as err:
+        print(f"Error at insertion function: {err.msg}")
+        return False
+    finally:
+        cur.close()
+        conn.close()
+
+def modify_recipe(_id, data):
+    conn = create_connection()
+    sql = fUPDATE recipes SET 
+                                title = %s, 
+                                category = %s,
+                                ingredients = %s, 
+                                directions = %s
+              WHERE id = {_id}                       
+            
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, data)
+        conn.commit()
+        return True
+    except connector.Error as err:
+        print(f"Error at update recipe function: {err.msg}")
+        return False
+    finally:
+        cur.close()
+        conn.close()
+"""
+
+# create recipes page
+@login_required(login_url='/')
+def add_recipe(request):
+    if request.method == 'POST':
+        data = request.POST
+        new_name = data.get('name')
+        new_ingredients = data.get('ingredients')
+        new_description = data.get('description')
+        Recipe.objects.create(
+            recipe_name=new_name,
+            recipe_ingredients=new_ingredients,
+            recipe_description=new_description,
+        )
+        return redirect('/home/')
+
+    queryset = Recipe.objects.all()
+    if request.GET.get('search'):
+        queryset = queryset.filter(
+            name__icontains=request.GET.get('search'))
+
+    context = {'recipe': queryset}
+    return render(request, 'add_recipe.html', context)
+
+#Update the recipes data
+@login_required(login_url='/')
+def update_recipe(request, id):
+    queryset = Recipe.objects.get(id=id)
+
+    if request.method == 'POST':
+        data = request.POST
+        new_name = data.get('name')
+        new_ingredients = data.get('ingredients')
+        new_description = data.get('description')
+
+        queryset.new_name = new_name
+        queryset.new_ingredients = new_ingredients
+        queryset.new_description = new_description
+        queryset.save()
+        return redirect('/home/')
+
+    context = {'recipe': queryset}
+    return render(request, 'update_recipe.html', context)
 
 #Function that defines a login page
 def login_page(request):

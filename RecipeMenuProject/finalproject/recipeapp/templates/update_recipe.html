@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify Recipe</title>
+</head>
+<body>
+    <div class="container mt-5 col-5">
+        <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="InputNewName">Name:</label>
+            <input name="name" type="text" value="{{recipe.name}}"
+            required>
+        </div>
+        <div class="form-group">
+            <label for="InputNewIngredients">Ingredients:</label>
+            <input name="ingredients" type="text" value="{{recipe.ingredients}}"
+            required>
+        </div>
+        <div class="form-group">
+            <label for="InputNewDescr">Description:</label>
+            <textarea  name="description"  type="text" rows="5" cols="30" value="{{recipe.description}}"></textarea>
+        <br>
+        <br>
+
+        <button type="submit" >Save</button>
+        </form>
+    </div>
+</body>
+</html>

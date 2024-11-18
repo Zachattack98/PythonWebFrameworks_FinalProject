@@ -3,32 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title style="color: green;">Recipe List</title>
+    <title>Recipe List</title>
+    <!-- Styling each recipe card/table -->
     <style>
-        .container {
-            text-align: center;
-            margin: 100px auto;
-            max-width: 500px;
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .recipe-container {
             padding: 20px;
-            background-color: #fff;
+            margin-top: 30px;
+            background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            color: green;
-            font-weight: bold;
+        .recipe-header {
+            color: black;
         }
 
-        img {
-            width: 60%;
+        .recipe-table th,
+        .recipe-table td {
+            text-align: center;
+            border: 1px solid #dee2e6;
+            padding: 8px;
+        }
+
+        .recipe-table th {
+            background-color: #70e78c;
+            color: #fff;
+        }
+
+        .generate-pdf-btn {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Page heading -->
-        <h1>Welcome to the Recipe Page! Home of fun cooking ideas.</h1>
+    <div class="container recipe-container col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="recipe-header">Welcome to the Recipe Page! Home of fun cooking ideas.</h2>
+                <a href="/add_recipe">
+                    <button class="button">+New</button>
+                </a>
+                <br><br>
+                <table class="table recipe-table">
+                    <thead class="recipe-table-head">
+                        <tr>
+                            <th>Recipe Name</th>
+                            <th>Ingredients</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recipe in recipes %}
+                        <tr>
+                            <td>{{recipe.name}}</td>
+                            <td>{{recipe.ingredients}}</td>
+                            <td>{{recipe.description}}</td>
+                            <td>
+                            <a href="/update_recipe/{{recipe.id}}">Update</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <div class="container">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search dish by keyword(s)"
+          id="user-inp"
+        />
+        <button id="search-btn">Search</button>
+      </div>
+      <div id="result"></div>
+    </div>
+    <!-- Search Script -->
+    <script src="search.js"></script>
 </body>
 </html>

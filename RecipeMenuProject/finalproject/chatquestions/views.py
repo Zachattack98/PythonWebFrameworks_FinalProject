@@ -10,9 +10,9 @@ def questions_chatbot(request):
     chatbot_response = None
     if api_key is not None and request.method == 'POST':
         user_input = request.POST.get('user_input')
-        #ensure that only chatquestions pertaining to recipes are asked
-        prompt = f"if the question is related to recipes - answer it: {user_input}, else say: Sorry I can't answer this"
-
+        #ensure that only questions pertaining to recipes are asked
+        #prompt = f"if the question is related to recipes - answer it: {user_input}, else say: Sorry I can't answer this"
+        prompt = user_input
         response = openai.Completion.create(
             engine = 'text-davinci-003',
             prompt = prompt,
@@ -20,6 +20,6 @@ def questions_chatbot(request):
             temperature = 0.5
         )
         print(response)
-    return render(request, 'main.html', {})
+    return render(request, 'mainChat.html', {})
 
 

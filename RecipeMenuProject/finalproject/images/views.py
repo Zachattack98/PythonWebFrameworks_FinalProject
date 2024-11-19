@@ -12,9 +12,9 @@ openai.api_key = api_key
 def generate_image_from_txt(request):
     if api_key is not None and request.method == "POST":
         user_input = request.POST.get('user_input')
-        prompt = f"if the text is related to food - answer it: {user_input}, else say: Sorry I can't show this"
+        #prompt = f"if the text is related to food - answer it: {user_input}, else say: Sorry I can't show this"
 
-        response = openai.Completion.create(
+        response = openai.Image.create(
             prompt = user_input,
             size = '256x256'
         )
@@ -32,4 +32,4 @@ def generate_image_from_txt(request):
 
         print(obj)
 
-    return render(request, "main.html", {})
+    return render(request, "mainImage.html", {})

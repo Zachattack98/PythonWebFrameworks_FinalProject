@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import *
+from .models import Recipe
 #from mysql import connector
 #from connection import create_connection
 
@@ -59,17 +59,18 @@ def add_recipe(request):
         new_name = data.get('name')
         new_ingredients = data.get('ingredients')
         new_description = data.get('description')
-        Recipe.objects.create(
+        recipe = Recipe.objects.create(
             recipe_name=new_name,
             recipe_ingredients=new_ingredients,
             recipe_description=new_description,
         )
+        recipe.save()
         return redirect('/home/')
 
-    queryset = Recipe.objects.all()
-    if request.GET.get('search'):
+    queryset = Recipe.objects.all().values()
+    """if request.GET.get('search'):
         queryset = queryset.filter(
-            name__icontains=request.GET.get('search'))
+            name__icontains=request.GET.get('search'))"""
 
     context = {'recipe': queryset}
     return render(request, 'add_recipe.html', context)

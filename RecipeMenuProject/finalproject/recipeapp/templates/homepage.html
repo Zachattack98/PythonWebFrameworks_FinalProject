@@ -49,16 +49,17 @@
                 </a>
                 <br><br>
                 <table class="table recipe-table">
-                    <thead class="recipe-table-head">
+                    <thead>
                         <tr>
-                            <th>Recipe Name</th>
-                            <th>Ingredients</th>
-                            <th>Description</th>
+                            <th scope="col">Recipe Name</th>
+                            <th scope="col">Ingredients</th>
+                            <th scope="col">Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for recipe in recipes %}
                         <tr>
+                            <th scope="row">{{forloop.counter}}</th>
                             <td>{{recipe.name}}</td>
                             <td>{{recipe.ingredients}}</td>
                             <td>{{recipe.description}}</td>
@@ -86,5 +87,13 @@
     </div>
     <!-- Search Script -->
     <script src="search.js"></script>
+    <br><br>
+    <a href="/chatbot">
+        <button class="button">Search using ChatGPT</button>
+    </a>
+    <br><br>
+    <a href="/images">
+        <button class="button">Search images of dish</button>
+    </a>
 </body>
 </html>

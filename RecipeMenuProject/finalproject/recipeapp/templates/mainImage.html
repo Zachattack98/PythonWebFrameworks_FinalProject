@@ -1,0 +1,11 @@
+{%  extends 'baseImage.html' %}
+
+{%  block content %}
+<h3>Name a dish you wanna see a picture of.</h3>
+
+<form method="post">
+    {%  csrf_token %}
+    <input type="text" class="form-control" name="user_input">
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>
+{%  endblock content %}

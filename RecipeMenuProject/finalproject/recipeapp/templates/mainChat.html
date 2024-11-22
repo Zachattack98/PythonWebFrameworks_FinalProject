@@ -1,0 +1,17 @@
+{%  extends 'baseChat.html' %}
+
+{%  block content %}
+<h3>Ask any questions you have concerning recipes.</h3>
+
+<form method="post">
+    {%  csrf_token %}
+    <input type="text" class="form-control" name="user_input">
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>
+
+{% comment %}
+{% load static %}
+<script src="{% static '/script.js' %}" type="text/javascript"></script>
+{% endcomment %}
+
+{%  endblock content %}

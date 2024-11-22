@@ -1,71 +1,64 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+#from django.http import HttpResponse, HttpResponseRedirect
+#from django.urls import reverse
+from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .models import Recipe
-#from mysql import connector
-#from connection import create_connection
+from django.core.files.base import ContentFile
+from .models import *
+import openai, os, requests
+from dotenv import load_dotenv
+load_dotenv()
+
+api_key = os.getenv("OPENAPI_KEY")
+openai.api_key = api_key
 
 #Function that defines a home page where all recipe lists are displayed
+@login_required(login_url='/')
 def recipelist_page(request):
+    """queryset = Recipe.objects.all().values()
+    template = loader.get_template("homepage.html")
+    context = {'recipe': queryset}"""
     # Render the home page template (GET request)
     return render(request, 'homepage.html')
 
-"""def add_recipe(data):
-    conn = create_connection()
-    sql = INSERT INTO recipes (title, category, ingredients, directions)
-             VALUES(%s, %s, %s, %s, %s, %s, %s)                        
-          
-    try:
-        cur = conn.cursor()
-        cur.execute(sql, data)
-        conn.commit()
-        return True
-    except connector.Error as err:
-        print(f"Error at insertion function: {err.msg}")
-        return False
-    finally:
-        cur.close()
-        conn.close()
+"""@login_required(login_url='/')
+def add(request):
+    template = loader.get_template('add_recipe.html')
+    return HttpResponse(template.render({}, request))
 
-def modify_recipe(_id, data):
-    conn = create_connection()
-    sql = fUPDATE recipes SET 
-                                title = %s, 
-                                category = %s,
-                                ingredients = %s, 
-                                directions = %s
-              WHERE id = {_id}                       
-            
-    try:
-        cur = conn.cursor()
-        cur.execute(sql, data)
-        conn.commit()
-        return True
-    except connector.Error as err:
-        print(f"Error at update recipe function: {err.msg}")
-        return False
-    finally:
-        cur.close()
-        conn.close()
-"""
+@login_required(login_url='/')
+def add_recipe(request):
+    new_name = request.POST['name']
+    new_ingredients = request.POST['ingredients']
+    new_description = request.POST['description']
+    recipe = Recipe(
+        recipe_name=new_name,
+        recipe_ingredients=new_ingredients,
+        recipe_description=new_description,
+    )
+    recipe.save()
+    return HttpResponseRedirect(reverse('recipelists'))"""
 
 # create recipes page
 @login_required(login_url='/')
 def add_recipe(request):
     if request.method == 'POST':
         data = request.POST
-        new_name = data.get('name')
-        new_ingredients = data.get('ingredients')
-        new_description = data.get('description')
+        recipe_name = data.get('name')
+        recipe_ingredients = data.get('ingredients')
+        recipe_description = data.get('description')
+        recipe_cooktime = data.get('cooktime')
         recipe = Recipe.objects.create(
-            recipe_name=new_name,
-            recipe_ingredients=new_ingredients,
-            recipe_description=new_description,
+            name=recipe_name,
+            ingredients=recipe_ingredients,
+            description=recipe_description,
+            cooktime = recipe_cooktime,
         )
         recipe.save()
-        return redirect('/home/')
+        return redirect('home/')
 
     queryset = Recipe.objects.all().values()
     """if request.GET.get('search'):
@@ -85,10 +78,12 @@ def update_recipe(request, id):
         new_name = data.get('name')
         new_ingredients = data.get('ingredients')
         new_description = data.get('description')
+        new_cooktime = data.get('cooktime')
 
-        queryset.new_name = new_name
-        queryset.new_ingredients = new_ingredients
-        queryset.new_description = new_description
+        queryset.name = new_name
+        queryset.ingredients = new_ingredients
+        queryset.description = new_description
+        queryset.cooktime = new_cooktime
         queryset.save()
         return redirect('/home/')
 
@@ -180,3 +175,45 @@ def register_page(request):
 
     #Render the registration page template (GET request)
     return render(request, 'register.html')
+
+@login_required(login_url='/')
+def questions_chatbot(request):
+    chatbot_response = None
+    if api_key is not None and request.method == 'POST':
+        user_input = request.POST.get('user_input')
+        #ensure that only questions pertaining to recipes are asked
+        #prompt = f"if the question is related to recipes - answer it: {user_input}, else say: Sorry I can't answer this"
+        prompt = user_input
+        response = openai.Completion.create(
+            engine = 'text-davinci-003',
+            prompt = prompt,
+            max_tokens = 100, #maximum of 100 characters for search bar
+            temperature = 0.5
+        )
+        print(response)
+    return render(request, 'mainChat.html', {})
+
+def generate_image_from_txt(request):
+    if api_key is not None and request.method == "POST":
+        user_input = request.POST.get('user_input')
+        #prompt = f"if the text is related to food - answer it: {user_input}, else say: Sorry I can't show this"
+
+        response = openai.Image.create(
+            prompt = user_input,
+            size = '256x256'
+        )
+        img_url = response["data"][0]["url"]
+
+        response = requests.get(img_url)
+        img_file = ContentFile(response.content)
+
+        count = Image.objects.count() + 1
+        fname = f"image-{count}.jpg"
+
+        obj = Image(phrase=user_input)
+        obj.ai_image.save(fname, img_file)
+        obj.save()
+
+        print(obj)
+
+    return render(request, "mainImage.html", {})

@@ -18,10 +18,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .recipe-header {
-            color: black;
-        }
-
         .recipe-table th,
         .recipe-table td {
             text-align: center;
@@ -30,30 +26,28 @@
         }
 
         .recipe-table th {
-            background-color: #70e78c;
+            background-color: #7076e7;
             color: #fff;
-        }
-
-        .generate-pdf-btn {
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <h2 class="recipe-header">Welcome to the Recipe Page! Home of fun cooking ideas.</h2>
+    <br><br>
+    <p>
+        <a href="add_recipe/"><button class="button">+New</button></a>
+    </p>
+
     <div class="container recipe-container col-md-8">
         <div class="card">
             <div class="card-body">
-                <h2 class="recipe-header">Welcome to the Recipe Page! Home of fun cooking ideas.</h2>
-                <a href="/add_recipe">
-                    <button class="button">+New</button>
-                </a>
-                <br><br>
                 <table class="table recipe-table">
-                    <thead>
+                    <thead class="recipe-table-head">
                         <tr>
-                            <th scope="col">Recipe Name</th>
-                            <th scope="col">Ingredients</th>
-                            <th scope="col">Description</th>
+                            <th>Recipe Name</th>
+                            <th>Ingredients</th>
+                            <th>Description</th>
+                            <th>Cooking Time</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,9 +57,7 @@
                             <td>{{recipe.name}}</td>
                             <td>{{recipe.ingredients}}</td>
                             <td>{{recipe.description}}</td>
-                            <td>
-                            <a href="/update_recipe/{{recipe.id}}">Update</a>
-                            </td>
+                            <td>{{recipe.cooktime}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,6 +66,10 @@
         </div>
     </div>
 
+    <p>
+        <a href="update_recipe/{{recipe.id}}">Update</a>
+    </p>
+    <br><br>
     <div class="container">
       <div class="search-container">
         <input
@@ -85,13 +81,13 @@
       </div>
       <div id="result"></div>
     </div>
+    <br><br>
     <!-- Search Script -->
     <script src="search.js"></script>
-    <br><br>
     <a href="/chatbot">
         <button class="button">Search using ChatGPT</button>
     </a>
-    <br><br>
+    <br>
     <a href="/images">
         <button class="button">Search images of dish</button>
     </a>

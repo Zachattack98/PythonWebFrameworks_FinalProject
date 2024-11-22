@@ -18,25 +18,32 @@
 <body>
     <div class="container mt-3 col-6">
     <br><br>
-    <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+        <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <h4> Recipe </h4>
+        <h4> Input Recipe Information</h4>
         <hr>
         <div class="form-group">
-          <label for="InputName">Recipe Name:</label>
+          <label for="InputName">Recipe Name:</label><br>
           <input name="name" type="text" required>
+          <br><br>
         </div>
         <div class="form-group">
-          <label for="InputIngredients">Ingredients:</label>
+          <label for="InputIngredients">Ingredients:</label><br>
           <input name="ingredients" type="text" required>
+          <br><br>
         </div>
         <div class="form-group">
-          <label for="InputDescription">Description:</label>
-          <textarea  name="description"  type="text" rows="5" cols="30" required></textarea>
+          <label for="InputDescription">Description:</label><br>
+          <textarea name="description"  type="text" rows="5" cols="30" required></textarea>
+          <br><br>
         </div>
-        <a href="home/">
-            <button type="submit" class="">Add Data</button>
-        </a>
-    </form>
+        <div class="form-group">
+          <label for="InputCookTime">Time to cook (in mins.):</label><br>
+          <input name="cooktime" type="text" required>
+          <br><br>
+        </div>
+        <input type="submit" value="Add Recipe">
+        </form>
+    </div>
 </body>
 </html>

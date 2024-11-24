@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login</title>
+    <style>
+        body {
+            padding-left: 11em;
+            font-family: Georgia, "Times New Roman",
+            Times, serif;
+            background-color: #009efd;
+        }
+        .button {
+            background-color: #1aaa04;
+            color: #f6ff7f;
+            padding: 15px 32px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -35,14 +51,14 @@
             <!-- Password input field -->
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password" required>
             </div>
 
             <!-- Link to registration page -->
             <p>If you don't have an account, please register here. <a href="/register/">Sign-up</a> </p>
 
             <!-- Submit button -->
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="button">Submit</button>
         </form>
     </div>
 </body>

@@ -18,53 +18,31 @@ openai.api_key = api_key
 #Function that defines a home page where all recipe lists are displayed
 @login_required(login_url='/')
 def recipelist_page(request):
-    """queryset = Recipe.objects.all().values()
-    template = loader.get_template("homepage.html")
-    context = {'recipe': queryset}"""
+    #Maily for clearing out all recipe data; uncomment to delete all
+    #Recipe.objects.all().delete()
+    queryset = Recipe.objects.all()
     # Render the home page template (GET request)
-    return render(request, 'homepage.html')
-
-"""@login_required(login_url='/')
-def add(request):
-    template = loader.get_template('add_recipe.html')
-    return HttpResponse(template.render({}, request))
-
-@login_required(login_url='/')
-def add_recipe(request):
-    new_name = request.POST['name']
-    new_ingredients = request.POST['ingredients']
-    new_description = request.POST['description']
-    recipe = Recipe(
-        recipe_name=new_name,
-        recipe_ingredients=new_ingredients,
-        recipe_description=new_description,
-    )
-    recipe.save()
-    return HttpResponseRedirect(reverse('recipelists'))"""
+    return render(request, 'homepage.html', {'recipes': queryset})
 
 # create recipes page
 @login_required(login_url='/')
 def add_recipe(request):
     if request.method == 'POST':
         data = request.POST
-        recipe_name = data.get('name')
-        recipe_ingredients = data.get('ingredients')
-        recipe_description = data.get('description')
-        recipe_cooktime = data.get('cooktime')
-        recipe = Recipe.objects.create(
-            name=recipe_name,
-            ingredients=recipe_ingredients,
-            description=recipe_description,
-            cooktime = recipe_cooktime,
+        new_recipe_name = data.get('name')
+        new_recipe_ingredients = data.get('ingredients')
+        new_recipe_description = data.get('description')
+        new_recipe_cooktime = data.get('cooktime')
+
+        Recipe.objects.create(
+            name=new_recipe_name,
+            ingredients=new_recipe_ingredients,
+            description=new_recipe_description,
+            cooktime = new_recipe_cooktime,
         )
-        recipe.save()
-        return redirect('home/')
+        return redirect('/home/')
 
-    queryset = Recipe.objects.all().values()
-    """if request.GET.get('search'):
-        queryset = queryset.filter(
-            name__icontains=request.GET.get('search'))"""
-
+    queryset = Recipe.objects.all()
     context = {'recipe': queryset}
     return render(request, 'add_recipe.html', context)
 
@@ -96,12 +74,6 @@ def login_page(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-
-        #Check if a user with the provided username exists
-        if not User.objects.filter(username=username).exists():
-            #Error message if username does not exist
-            messages.error(request, 'Invalid Username')
-            return redirect('/')
 
         #Authenticate the user with the provided username and password
         user = authenticate(username=username, password=password)
@@ -190,10 +162,13 @@ def questions_chatbot(request):
             max_tokens = 100, #maximum of 100 characters for search bar
             temperature = 0.5
         )
-        print(response)
-    return render(request, 'mainChat.html', {})
+        chatbot_response = response["choices"][0]["text"]
 
+    return render(request, 'chatbot_questions/mainChat.html', {"response": chatbot_response})
+
+@login_required(login_url='/')
 def generate_image_from_txt(request):
+    chatbot_response = None
     if api_key is not None and request.method == "POST":
         user_input = request.POST.get('user_input')
         #prompt = f"if the text is related to food - answer it: {user_input}, else say: Sorry I can't show this"
@@ -210,10 +185,8 @@ def generate_image_from_txt(request):
         count = Image.objects.count() + 1
         fname = f"image-{count}.jpg"
 
-        obj = Image(phrase=user_input)
-        obj.ai_image.save(fname, img_file)
-        obj.save()
+        chatbot_response = Image(phrase=user_input)
+        chatbot_response.ai_image.save(fname, img_file)
+        chatbot_response.save()
 
-        print(obj)
-
-    return render(request, "mainImage.html", {})
+    return render(request, "chatbot_images/mainImage.html", {"object:": chatbot_response})

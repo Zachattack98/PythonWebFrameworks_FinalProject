@@ -1,0 +1,18 @@
+{%  extends 'chatbot_images/baseImage.html' %}
+
+{%  block content %}
+{% load static %}
+<img src="{% static 'images/chatbot.jpg' %}" width="300" height="200" alt="Image" />
+
+<h3>Name a dish you wanna see a picture of.</h3>
+
+<form method="post">
+    {%  csrf_token %}
+    <input type="text" class="form-control" name="user_input">
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>
+    <br>
+    {% if response %}
+        <div><h2>ChatBot: {{ response|safe }}</h2></div>
+    {% endif %}
+{%  endblock content %}

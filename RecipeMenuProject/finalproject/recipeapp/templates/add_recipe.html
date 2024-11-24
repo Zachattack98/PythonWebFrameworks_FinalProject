@@ -5,20 +5,28 @@
     <title>Add New Recipe</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-    .ok{
-        color: white;
-        text-decoration: none;
-    }
-    .ok:hover{
-        color: white;
-        text-decoration: none;
-    }
+        body {
+            padding-left: 11em;
+            font-family: Georgia, "Times New Roman",
+            Times, serif;
+            {% load static %}
+            background-image: url({% static 'images/recipe_card.jpg' %});
+        }
+        .button {
+            background-color: #aa8304;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="container mt-3 col-6">
     <br><br>
-        <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+        <form class="col-15 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <h4> Input Recipe Information</h4>
         <hr>
@@ -42,7 +50,7 @@
           <input name="cooktime" type="text" required>
           <br><br>
         </div>
-        <input type="submit" value="Add Recipe">
+        <button type="submit" class="button">Add Receipe</button>
         </form>
     </div>
 </body>

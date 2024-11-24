@@ -4,35 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe List</title>
-    <!-- Styling each recipe card/table -->
+    <!-- Styling each background and recipe card -->
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #da5a3d
         }
-
         .recipe-container {
             padding: 20px;
             margin-top: 30px;
-            background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        .recipe-table th,
-        .recipe-table td {
-            text-align: center;
-            border: 1px solid #dee2e6;
-            padding: 8px;
+        .recipe-header {
+            color: rgb(0, 253, 223);
         }
-
-        .recipe-table th {
-            background-color: #7076e7;
-            color: #fff;
+        .highlight {
+            color: #00ff48;
+        }
+        .button {
+            background-color: #aa0470;
+            color: #00cffd;
+            padding: 15px 32px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
+    {% load static %}
+    <img src="{% static 'images/mealprep.jpg' %}" width="300" height="200" alt="Image">
     <h2 class="recipe-header">Welcome to the Recipe Page! Home of fun cooking ideas.</h2>
+    <br><br>
+    <div class="container">
+        <div class="search-container">
+		    <i class="fas fa-search"></i>
+            <label for="searchInput"></label>
+            <input type="text" id="searchInput" placeholder="Search dish by keyword(s)">
+            <button id="searchBtn">Search</button>
+        </div>
+	</div>
+    <!-- Search Script -->
+    <script src="chatbot_questions/search.js"></script>
     <br><br>
     <p>
         <a href="add_recipe/"><button class="button">+New</button></a>
@@ -41,55 +54,30 @@
     <div class="container recipe-container col-md-8">
         <div class="card">
             <div class="card-body">
-                <table class="table recipe-table">
-                    <thead class="recipe-table-head">
-                        <tr>
-                            <th>Recipe Name</th>
-                            <th>Ingredients</th>
-                            <th>Description</th>
-                            <th>Cooking Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for recipe in recipes %}
-                        <tr>
-                            <th scope="row">{{forloop.counter}}</th>
-                            <td>{{recipe.name}}</td>
-                            <td>{{recipe.ingredients}}</td>
-                            <td>{{recipe.description}}</td>
-                            <td>{{recipe.cooktime}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                {% if recipes %}
+                    {% for recipe in recipes %}
+                        <p>
+                        <span class="highlight">Title:</span> {{recipe.name}}<br><br>
+                        <span class="highlight">Ingredients:</span> {{recipe.ingredients}}<br>
+                        <span class="highlight">Preparation:</span> {{recipe.description}}<br>
+                        <span class="highlight">Time to cook:</span> {{recipe.cooktime}} minutes<br>
+                        </p>
+                        <a href="update_recipe/{{recipe.id}}">Update</a>
+                        <h1>---------</h1>
+                    {% endfor %}
+                {% else %}
+                    <h1> No Recipes Available</h1>
+                {% endif %}
             </div>
         </div>
     </div>
-
-    <p>
-        <a href="update_recipe/{{recipe.id}}">Update</a>
-    </p>
     <br><br>
-    <div class="container">
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="Search dish by keyword(s)"
-          id="user-inp"
-        />
-        <button id="search-btn">Search</button>
-      </div>
-      <div id="result"></div>
-    </div>
-    <br><br>
-    <!-- Search Script -->
-    <script src="search.js"></script>
     <a href="/chatbot">
-        <button class="button">Search using ChatGPT</button>
+        <button class="button">Ask Chatbot questions</button>
     </a>
     <br>
     <a href="/images">
-        <button class="button">Search images of dish</button>
+        <button class="button">Ask Chatbot for images</button>
     </a>
 </body>
 </html>

@@ -9,7 +9,7 @@ class RecipeModelTest(TestCase):
             name='Pumpkin Bars',
             ingredients='Pumpkin Mix, 2 Cup Milk, 4 Eggs, Sugar, Flour, Baking Soda, and Vanilla.',
             description='Beat everything into a bowl, pour into a pan, and bake in oven at 350 degrees.',
-            cooktime = 85
+            cooktime = 35
         )
 
     # test to see if the recipe's name is initialized as expected
